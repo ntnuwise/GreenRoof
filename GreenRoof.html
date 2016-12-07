@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- jQuery -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <!-- 最新編譯和最佳化的 CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- 選擇性佈景主題 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <!-- 最新編譯和最佳化的 JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+      .block1{border-radius: 5px; background:#bce8f1; margin: 5px 0px;}
+      .block2{border-radius: 5px; background:#d6e9c6; margin: 5px 0px;}
+      .block3{border-radius: 5px; background:#faebcc; margin: 5px 0px;}
+      .block4{border-radius: 5px; background:#ebccd1; margin: 5px 0px;}
+      .title{font-weight: bold;}
+    </style>
+  </head>
+
+  <body>
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <select id="solutionSelect" class="form-control" onchange="solutionOnChange(event)">
+          <option style='display:none;'>請選擇方案</option>
+          <option value="1">甲、精緻型屋頂綠化</option>
+          <option value="2">乙、粗放型屋頂綠化</option>
+          <option value="3">丙、農場型屋頂綠化</option>
+          <option value="4">丁、裝設太陽能板</option>
+          <option value="5">戊、無作為</option>
+        </select>
+      </div>
+
+      <div class="panel-body">
+        <div class="row">
+          <div class="block1 col-xs-12 col-sm-12 col-md-4">
+            <span class="title">內容</span><br/>
+            <span id="block1"></span>
+          </div>
+          <div class="block2 col-xs-12 col-sm-6 col-md-4">
+            <span class="title">可選細項</span><br/>
+            <select id="block2" class="form-control col-xs-12" onchange="optionDetailSelectInit()"></select>
+          </div>
+          <div class="block2 col-xs-12 col-sm-6 col-md-4">
+            <span class="title">選擇細項</span><br/>
+            <select id="block3" class="form-control col-xs-12"></select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="block3 col-xs-12 col-sm-6 col-md-3">
+            <span class="title">成本</span><br/>
+            <span id="block4"></span>
+          </div>
+          <div class="block3 col-xs-12 col-sm-6 col-md-3">
+            <span class="title">政府補助</span><br/>
+            <span id="block5"></span>
+          </div>
+
+          <div class="block4 col-xs-12 col-sm-6 col-md-3">
+            <span class="title">優點</span><br/>
+            <span id="block6"></span>
+          </div>
+          <div class="block4 col-xs-12 col-sm-6 col-md-3">
+            <span class="title">缺點</span><br/>
+            <span id="block7"></span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="block1 col-xs-12">
+            <span class="title">計算結果</span><br/>
+            <span id="">承重：<br/>成本：<br/>維護費：<br/>第一年節省電費：<br/>四年內的總經費：<br/>這段期間每戶需要分攤的經費：</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    var solution=[{
+              "solutionID": "1",
+              "cost": "5萬元/m2",
+              "solutionDescription": "涼亭（100 kg/座）、<br/>水景（100 kg/式）、<br/>花架（50 kg/座）、<br/>步道（20 kg/式）、<br/>喬木（50 kg/株）、<br/>灌木（70 kg/m2）",
+              "subsidy": "政府補助30%施工經費，之後每年補助維修經費5%。",
+              "strength": "具接觸觀賞、娛樂休閒療癒等功能、有豐富的植物種類、提供多樣生物棲地、保水功能優良等",
+              "weakness": "承重大（約300~600kg/㎡或以上）、維護費高",
+              "option": ["灌木種類","喬木種類","土壤材質"],
+              "optionDetail": [["杜鵑","馬纓丹","武竹"],["榕樹","小葉欖仁","楓香"],["植生陶石（保水性佳、質量輕）","粗河砂","泥炭土"]]
+            },
+            {
+              "solutionID": "2",
+              "cost": "1萬元/m2",
+              "solutionDescription": "草皮（20 kg/m2）、<br/>草花（40 kg/m2）、<br/>低矮灌木（60 kg/m2）",
+              "subsidy": "政府補助30%施工經費",
+              "strength": "抗旱、承重小（約100~300 kg/㎡）、投資少、維護費低（一年一次）",
+              "weakness": "不易親近、保水功能普通",
+              "option": ["灌木種類","喬木（耐旱）","土壤材質"],
+              "optionDetail": [["杜鵑","馬纓丹","武竹"],["榕樹","小葉欖仁","楓香"],["植生陶石（保水性佳、質量輕）","粗河砂","泥炭土"]]
+            },
+            {
+              "solutionID": "3",
+              "cost": "0.5萬元/m2",
+              "solutionDescription": "可運用盆缽方式，可種植蔬菜，結合假日市集活動",
+              "subsidy": "政府補助10%施工經費",
+              "strength": "承重小（取決於盆栽大小與數量）、維護費低（取決於盆栽大小與數量）、可調整（變化性高）",
+              "weakness": "植物根系生長受限、較無保水功能",
+              "option": ["盆栽種類數量（各種蔬菜的採收期不同）",""],
+              "optionDetail": [["1","2","3","4","5"]]
+            },
+            {
+              "solutionID": "4",
+              "cost": "1萬元/m2<br/>施作工程至少約12坪約30萬元。<br/>太陽能板壽命約20年。",
+              "solutionDescription": "裝設太陽能板，可選面向及角度。",
+              "subsidy": "政府補助40%施工經費",
+              "strength": "承重小，可開源（賣電）",
+              "weakness": "建置費用高、日照成低緯度變動",
+              "option": null,
+              "optionDetail": null
+            },
+            {
+              "solutionID": "5",
+              "cost": "無",
+              "solutionDescription": "維持原本狀態",
+              "subsidy": "無",
+              "strength": "不用付出經費",
+              "weakness": "無法解決都市熱島問題",
+              "option": null,
+              "optionDetail": null
+            }];
+
+    function solutionOnChange(e){
+      document.getElementById("block1").innerHTML=solution[e.target.value-1].solutionDescription;
+      //document.getElementById("block2").innerHTML=solution[e.target.value-1].option;
+
+      //document.getElementById("block2").options.length=0;
+      selectInit(solution[e.target.value-1].option,document.getElementById("block2"));
+      /*if(document.getElementById("block2").length==1){
+        console.log(document.getElementById("block3"));
+        console.log(solution[document.getElementById("solutionSelect").value-1].optionDetail[document.getElementById("block2").value]);
+        selectInit(solution[document.getElementById("solutionSelect").value-1].optionDetail[document.getElementById("block2").value],document.getElementById("block3"));
+      }*/
+
+      document.getElementById("block3").size=document.getElementById("block3").options.length=0;
+      //document.getElementById("block3").innerHTML=solution[e.target.value-1].optionDetail;
+      document.getElementById("block4").innerHTML=solution[e.target.value-1].cost;
+      document.getElementById("block5").innerHTML=solution[e.target.value-1].subsidy;
+      document.getElementById("block6").innerHTML=solution[e.target.value-1].strength;
+      document.getElementById("block7").innerHTML=solution[e.target.value-1].weakness;
+    }
+
+    function selectInit(option,select){
+      //var select=document.getElementById("block2");
+      select.length=0;
+      for(var key in option){
+        select.options.add(new Option(option[key],key));
+      }
+      select.size=select.length;
+    }
+
+    function optionDetailSelectInit(){
+      var option=solution[document.getElementById("solutionSelect").value-1].optionDetail[document.getElementById("block2").value];
+      var select=document.getElementById("block3");
+      //console.log(select);
+      selectInit(option,select);
+    }
+  </script>
+</html>
